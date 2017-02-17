@@ -1,2 +1,6 @@
-# slick-engines
-Ember Meetup SLC - Ember Engines
+# Ember Meet SLC - Ember Engines - Slick Engines
+
+
+
+
+### Resources
