@@ -7,6 +7,9 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('pop-spectrums');
+  this.route('rock-spectrums');
+  this.route('trance-spectrums');
 });
 
 export default Router;
