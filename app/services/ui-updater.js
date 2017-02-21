@@ -1,12 +1,11 @@
 import Ember from 'ember';
+import $ from 'jquery';
 
 const {
-  Service,
-  inject: { service }
+  Service
 } = Ember;
 
 export default Service.extend({
-  soundcloud: service(),
   controlPanel: null,
   trackInfoPanel: null,
   infoImage: null,
@@ -36,25 +35,22 @@ export default Service.extend({
     this.get('trackInfoPanel').className = 'hidden';
   },
 
-  update() {
+  update(currentTrack) {
     var artistLink = document.createElement('a'),
         trackLink = document.createElement('a'),
         infoImage = this.get('infoImage'),
         infoArtist = this.get('infoArtist'),
         infoTrack = this.get('infoTrack'),
         trackInfoPanel = this.get('trackInfoPanel'),
-        loader = this.get('soundcloud'),
-        sound = loader.get('sound'),
-        user = sound.user,
+        user = currentTrack.user,
         username = user.username,
         permalink_url = user.permalink_url,
-        image = loader.sound.artwork_url ? loader.sound.artwork_url : loader.sound.user.avatar_url,
-        trackToken = sound.permalink_url.substr(22);
+        image = currentTrack.artwork_url ? currentTrack.artwork_url : currentTrack.user.avatar_url;
 
     artistLink.setAttribute('href', permalink_url);
     artistLink.innerHTML = username;
     trackLink.setAttribute('href', permalink_url);
-    trackLink.innerHTML = sound.title;
+    trackLink.innerHTML = currentTrack.title;
     infoImage.setAttribute('src', image);
     infoArtist.innerHTML = '';
     infoArtist.appendChild(artistLink);

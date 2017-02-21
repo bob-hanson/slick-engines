@@ -7,29 +7,29 @@ const {
 } = Ember;
 
 export default Component.extend({
-  soundcloud: service(),
   visualizer: service(),
   uiUpdater: service(),
 
   spectrumTitle: "My Spectrum",
   initialTrack: null,
   hasInitialTrack: notEmpty('initialTrack'),
+  currentTrack: null,
+
+  init() {
+    this._super(...arguments);
+    this.get('visualizer').initAudioSetup();
+  },
 
   didInsertElement() {
-    this.get('soundcloud').initSoundCloudPlayer();
-    this.get('uiUpdater').initUi();
     this.get('visualizer').initVisualizer();
+    this.get('uiUpdater').initUi();
     this.toggleControlPanel();
     this.checkForInitialTrack();
     window.addEventListener("keydown", this.keyControls.bind(this), false);
   },
 
-  redraw() {
-    this.get('visualizer').draw();
-  },
-
   loadAndUpdate(trackUrl) {
-    this.get('soundcloud').loadStream(trackUrl, this);
+    this.get('visualizer').loadStream(trackUrl, this);
   },
 
   checkForInitialTrack() {
@@ -42,15 +42,17 @@ export default Component.extend({
     this.get('uiUpdater').displayMessage("Error", "There was a problem loading the file");
   },
 
-  updateUI() {
+  updateControlPanelAndSpectrum(resolvedTrack) {
+    this.set('currentTrack', resolvedTrack);
     this.get('uiUpdater').clearInfoPanel();
-    this.get('uiUpdater').update();
+    this.get('uiUpdater').update(resolvedTrack);
+    this.get('visualizer').processVisualization();
     setTimeout(this.toggleControlPanel.bind(this), 3000);
   },
 
   keyControls(e) {
     if (e.keyCode === 32) {
-      this.get('soundcloud').setPlayerState();
+      this.get('visualizer').setPlayerState();
     }
   },
 

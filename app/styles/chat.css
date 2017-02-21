@@ -1,0 +1,58 @@
+.chat {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  background: #fe2c4c;
+  z-index: 100;
+  transition: all cubic-bezier(.52,0,.53,1) 0.3s;
+  border-radius: 50%;
+}
+.chat.is-active {
+  width: 200px;
+  height: 200px;
+  bottom: 0px;
+  right: 0px;
+  border-radius: 0;
+}
+.chat .chat-wrap {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity cubic-bezier(.52,0,.53,1) 0.5s;
+}
+.chat.is-active .chat-wrap {
+  visibility: visible;
+  opacity: 1;
+}
+.chat i { cursor: pointer; color: #fff; }
+.chat .chat-icon {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  width: 39px;
+  height: 35px;
+  opacity: 1;
+  transition: opacity cubic-bezier(.52,0,.53,1) 0.2s;
+}
+.chat.is-active .chat-icon {
+  opacity: 0;
+}
+.chat header {
+  font-family: 'nexa', sans-serif;
+  font-size: 16px;
+  color: #fff;
+}
+.chat .close-icon {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: 20px;
+}
+.chat textarea {
+  width: 100%;
+  box-sizing: border-box;
+  height: 156px;
+  padding: 10px;
+}

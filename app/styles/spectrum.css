@@ -58,7 +58,7 @@ a:hover, a:active {
 #controlPanel {
     z-index: 50;
     position: absolute;
-    bottom:7px;
+    bottom:0px;
     width: 100%;
     color: #999;
     max-height: 600px;
@@ -66,6 +66,7 @@ a:hover, a:active {
    	-moz-transition: max-height 0.8s;
    	transition: max-height 0.8s;
     overflow: hidden;
+		background: #000;
 }
 #controlPanel.hidden {
   max-height: 52px;
@@ -139,7 +140,7 @@ a:hover, a:active {
     border: none;
 }
 #player {
-    width: 95%;
+    width: 88%;
 }
 #messageBox {
     position: absolute;
