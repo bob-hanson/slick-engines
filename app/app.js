@@ -10,7 +10,28 @@ Ember.MODEL_FACTORY_INJECTIONS = true;
 App = Ember.Application.extend({
   modulePrefix: config.modulePrefix,
   podModulePrefix: config.podModulePrefix,
-  Resolver
+  Resolver,
+
+  engines: {
+    spectrums: {
+      dependencies: {
+        services: [
+          'visualizer',
+          'uiUpdater',
+          'trackLists'
+        ]
+      }
+    },
+    internalSpectrums: {
+      dependencies: {
+        services: [
+          'visualizer',
+          'uiUpdater',
+          'trackLists'
+        ]
+      }
+    }
+  }
 });
 
 loadInitializers(App, config.modulePrefix);

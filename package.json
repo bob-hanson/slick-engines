@@ -1,9 +1,9 @@
 {
   "name": "slick-engines",
-  "version": "0.0.0",
-  "description": "Small description for slick-engines goes here",
+  "version": "0.1.0",
+  "description": "Ember SLC Meetup on Ember Engines",
   "license": "MIT",
-  "author": "",
+  "author": "Bob Hanson",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -33,15 +33,25 @@
     "ember-cli-test-loader": "^1.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "^2.11.0",
+    "ember-engines": "0.4.0",
     "ember-export-application-global": "^1.0.5",
     "ember-load-initializers": "^0.6.0",
     "ember-resolver": "^2.0.3",
     "ember-source": "~2.11.0",
-    "ember-welcome-page": "^2.0.2",
-    "loader.js": "^4.0.10"
+    "loader.js": "^4.0.10",
+    "spectrum-component": "*"
+  },
+  "dependencies": {
+    "spectrums": "*",
+    "spectrum-chat": "*"
   },
   "engines": {
     "node": ">= 0.12.0"
   },
-  "private": true
+  "private": true,
+  "ember-addon": {
+    "paths": [
+      "lib/internal-spectrum"
+    ]
+  }
 }

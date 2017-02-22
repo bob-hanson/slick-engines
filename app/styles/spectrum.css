@@ -52,6 +52,23 @@ a, a:visited {
 a:hover, a:active {
     color: #fff;
 }
+.track-list {
+	position: relative;
+  z-index: 100;
+  float: right;
+  top: 50px;
+  right: 30px;
+}
+.track-list li {
+	color:#fff;
+	list-style: none;
+	cursor: pointer;
+	font-family: 'nexa';
+	padding: 3px 0px;
+}
+.track-list li:hover {
+	color:#fe2c4c;
+}
 #info {
     display: none;
 }
@@ -167,35 +184,4 @@ a:hover, a:active {
 }
 #messageBox a:link, #messageBox a:visited {
     color: #666;
-}
-footer {
-    position: absolute;
-    bottom: 0;
-    z-index: 100;
-    background-color: #111;
-    width: 100%;
-    color: #999;
-    height: 35px;
-}
-#credit, #github {
-    display: inline-block;
-    padding-top: 8px;
-    padding-right: 10px;
-}
-#scLogo {
-    float: right;
-}
-/* make some txt small for small screens */
-@media (max-width: 900px) {
-    footer {
-        font-size: 12px;
-    }
-}
-@media (max-width: 480px) {
-    #input {
-        font-size: 16px;
-    }
-    footer {
-        font-size: 10px;
-    }
 }

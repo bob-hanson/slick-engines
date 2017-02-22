@@ -4,4 +4,4 @@
 .master-navigation li a { font-family: 'nexa'; padding: 10px; color: #fff; transition: all cubic-bezier(.52,0,.53,1) 0.3s;}
 .master-navigation li a:hover { color: #fe2c4c; }
 
-.heading {position: absolute;top: 50px;left: 15px;font-size: 40px;color: #fff;font-family: 'nexa';opacity: 0.5;}
+.heading {position: absolute;top: 50px;left: 15px;font-size: 40px;color: #fff;font-family: 'nexa';opacity: 0.5; text-transform: capitalize;}
