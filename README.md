@@ -12,6 +12,8 @@
 
 ### Setup Current App
 
+install Ember Engines in your App.
+
 ```
 ember install ember-engines
 
@@ -22,9 +24,11 @@ ember install ember-engines
 
 Setup New Addon
 
-In our case, we have wanting rock-spectrums as an external engine. But we can also create a generic engine and name it in the routes when we mount it. so lets do that.
+In our case, we have wanting rock-spectrums as an external engine. But we can also create a generic engine and name it in the routes when we mount it. so lets do that. This will allow us to use 1 Engines for multiple routes.
 
 ```
+// in your code folder, outside your current app.
+
 ember addon spectrums
 cd spectrums
 
@@ -53,7 +57,7 @@ bower install -- Reinstall bower dependencies.
 ember init -- This runs the new project blueprint on your projects directory. Please follow the prompts, and review all changes (tip: you can see a diff by pressing d). The most common source of upgrade pain is missing changes in this step.
 ```
 
-After we are all updated, we need to install Ember Engines into our addon
+After we are all updated, we need to install Ember Engines into our Addon
 
 ```
 ember install ember-engines
@@ -61,20 +65,20 @@ ember install ember-engines
 
 According to the guides, we need to make sure that ember engines is set as a devDependency only to avoid issues with the comsuming application.
 
-Now we need to make sure that htmlBars is listed as a dependency
+Now we need to make sure that htmlBars is listed as a dependency in our Engine package.json
 
 ```
-// package.json
+// {{MyEngine}}/package.json
   "dependencies": {
     "ember-cli-babel": "^5.1.7",
     "ember-cli-htmlbars": "^1.1.1"
   }
 ```
 
-Configure the engine
+Configure the Engine by adding stuff to the {{MyEngine}}/index.js and {{MyEngine}}/config/environment.js
 
 ```
-// index.js
+// {{MyEngine}}/index.js
 
 /*jshint node:true*/
 const EngineAddon = require('ember-engines/lib/engine-addon');
@@ -85,7 +89,7 @@ module.exports = EngineAddon.extend({
 ```
 
 ```
-// config/environment.js
+// {{MyEngine}}/config/environment.js
 
 /*jshint node:true*/
 'use strict';
@@ -100,18 +104,20 @@ module.exports = function(environment) {
 };
 ```
 
-Now we turn the addon into an actual engine.
+Now we turn the Addon into an actual Engine.
 
-Create an engine.js file in the addon dir. This is similar to the app.js file in a normal Ember App.
+Create an engine.js file in the {{MyEngine}}/addon dir. This is similar to the app.js file in a normal Ember App.
 
 ```
+// {{MyEngine}}
+
 touch addon/engine.js
 ```
 
 Then add this code
 
 ```
-// addon/engine.js
+// {{MyEngine}}/addon/engine.js
 
 import Engine from 'ember-engines/engine';
 import Resolver from 'ember-resolver';
@@ -133,14 +139,15 @@ export default Eng;
 
 ### Create External Engine Routes
 
-To have routes under your engine, we'll need to add a routes.js file to the addon dir.
+To have routes under your Engine, we'll need to add a routes.js file to the addon dir.
 
 ```
+// {{MyEngine}}/addon
+
 touch addon/routes.js
 ```
 
-
-The key note here is when you have routes in an Engine, the top level route it similar to the application route in an app. So you dont need to add it explicitly.
+The key note here is when you have routes in an Engine, the top level route, in our case "rock-spectrums" becomes the "application" route in the Engine.
 
 **Example**
 
@@ -155,19 +162,19 @@ Router.map(function() {
 
   this.route('rock-spectrums', { resetNamespace: true }, function () {
     this.route('rock-spectrum', { resetNamespace: true, path: ':id' }, function () {
-      this.route('edit-rock-spectrum', { resetNamespace: true });
+      this.route('edit-rock-spectrum');
     });
   });
 
 });
 ```
-In our example, we're creating 'rock-spectrums' as an engine
-
-So when we move the child routes to the engine, we exclude the 'rock-spectrums
+In our example, With 'rock-spectrums' becoming an engine we move the child routes to the engine and exclude the 'rock-spectrums' route since it becomes 'application'
 
 In Rock Spectrums Engine
 
 ```
+// {{MyEngine}}/addon/routes.js
+
 import buildRoutes from 'ember-engines/routes';
 
 export default buildRoutes(function() {
@@ -191,17 +198,21 @@ One of the biggest reasons to use Engines is to lazy load portions of your app b
 
 ***Note Lazy Loading only applies to routeable engines**
 
-in your index.js file
+in your {{MyEngine}}/index.js file
 
 ```
+// {{MyEngine}}/index.js
+
 module.exports = EngineAddon.extend({
   name: 'spectrums',
   lazyLoading: true
 });
 ```
-Also, to allow our app to reload when we are working in our dev env, lets add the method **"isDevelopingAddon"** to do so in our index.js
+Also, to allow our app to reload when we are working in our dev env, lets add the method **"isDevelopingAddon"** to do so in our {{MyEngine}}/index.js. Just make sure to turn this off when moving to production.
 
 ```
+// {{MyEngine}}/index.js
+
 const EngineAddon = require('ember-engines/lib/engine-addon');
 
 module.exports = EngineAddon.extend({
@@ -217,7 +228,7 @@ module.exports = EngineAddon.extend({
 
 There are a few things to note about linking. Both internal to the engine and external to the parent.
 
-When internal, the thing to note is. The top level route becomes **"application"** and if you have any top level nested scoped routes, they do not need the prefix.
+When internal, since our top level route becomes **"application"** and if you have any top level nested scoped routes, they do not need the prefix.
 
 **Internal**
 
@@ -227,10 +238,10 @@ In the case of our "rock-spectrums" route that is now an Engine.
 {{link-to 'application'}} // will now link to the top level inside the engine.
 
 ```
-If we had a "rock-spectrums/:id"
+If we had a "rock-spectrums.some-nested-non-namespace-reset-route"
 
 ```
-{{link-to 'rock-spectrum' spectrum }} // notice we dont have the top level in the link path.
+{{link-to 'some-nested-non-namespace-reset-route' }} // notice we dont have the top level in the link path.
 
 ```
 **External**
@@ -240,7 +251,7 @@ A few more things need to happen to wire up links that are external to an engine
 We need to declare the dependent routes were wanting to link to in the engine.js file
 
 ```
-// addon/engine.js
+// {{MyEngine}}/addon/engine.js
 
 export default Engine.extend({
   // ...
@@ -255,7 +266,7 @@ export default Engine.extend({
 And we also need to set these in the parent app in the app.js file
 
 ```
-// parent-app/app.js
+// {{EmberApp}}/app.js
 
 const App = Ember.Application.extend({
   // ....
@@ -288,7 +299,7 @@ Using services is an Engine is a way to pass around state to your engines. Its p
 **In the Engine**
 
 ```
-// addon/engine.js
+// {{MyEngine}}/addon/engine.js
 
 export default Engine.extend({
   // ...
@@ -305,7 +316,7 @@ export default Engine.extend({
 **In the Parent**
 
 ```
-// parent-app/app.js
+// {{EmberApp}}/app.js
 
 const App = Ember.Application.extend({
   // ....
@@ -326,7 +337,11 @@ const App = Ember.Application.extend({
 
 **Note:** You can namespace a service when defining in the parent by passing a object KV.
 
+```
+// {{EmberApp}}/app.js
+
 services: [{ engineSessionService: 'parent-sesson-service']
+```
 
 ### Using Components
 
@@ -337,7 +352,7 @@ To use a common component across engines, you'll need to move that component to 
 You can add the addon to your devDependencies and then re-export it.
 
 ```
-// package.json in engine
+// {{MyEngine}}/package.json
 
 devDependecies: {
 
@@ -349,16 +364,25 @@ devDependecies: {
 Then in the addon dir, re-export it.
 
 ```
-// MyEngine/addons/components/my-addon-component.js
+// {{MyEngine}}/addons/components/my-addon-component.js
 
 export { default } from 'my-addon/components/my-addon-component';
 
 
 ```
+**my-addon** is the name of the Node Addon Package
 
-Also, if you have the proper content in the index.js file of your engine, it will export all by default
+**components** is the components dir in the Node/addon
+
+**my-addon-component** the name of the component to export.
+
+
+
+Also, if you have the proper content in the {{MyEngine}}/index.js file, it will export all by default
 
 ```
+// {{MyEngine}}/index.js
+
 var EngineAddon = require('ember-engines/lib/engine-addon');
 module.exports = EngineAddon.extend({
   name: 'my-engine'
