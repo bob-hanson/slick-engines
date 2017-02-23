@@ -53,7 +53,7 @@ a:hover, a:active {
     color: #fff;
 }
 .track-list {
-	position: relative;
+	position: absolute;
   z-index: 100;
   float: right;
   top: 50px;
@@ -86,7 +86,7 @@ a:hover, a:active {
 		background: #000;
 }
 #controlPanel.hidden {
-  max-height: 52px;
+  max-height: 65px;
 }
 #tab {
     padding: 10px 16px 2px 16px;

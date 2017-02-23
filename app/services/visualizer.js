@@ -70,7 +70,7 @@ export default Service.extend({
 
   processVisualization() {
     var analyser = this.get('analyser'),
-        sourcePlayer = this.get('sourcePlayer'),
+        // sourcePlayer = this.get('sourcePlayer'),
         bins = new Uint8Array(analyser.frequencyBinCount);
     this.set('bins', bins);
     analyser.getByteFrequencyData(bins);
@@ -89,7 +89,7 @@ export default Service.extend({
   buildSourceNode() {
     var context = this.get('audioContext'),
         analyser = this.get('analyser'),
-        processNode = this.get('processNode'),
+        // processNode = this.get('processNode'),
         sourcePlayer = context.createMediaElementSource(this.get('player'));
 
     sourcePlayer.connect(analyser);
@@ -109,7 +109,7 @@ export default Service.extend({
   },
 
   handleSCResolve(spectrum, resolvedTrack) {
-    var context = this.get('audioContext');
+    // var context = this.get('audioContext');
     if (resolvedTrack.errors) {
       this.handlePlayerError();
     } else {
@@ -165,7 +165,7 @@ export default Service.extend({
 
   displaySpectrum(bins) {
     var canvas = this.get('fgCanvas'),
-        analyser = this.get('analyser'),
+        // analyser = this.get('analyser'),
         ctx = this.get('fgCtx');
 
     for (let i = 0; i < bins.length; i++) {
