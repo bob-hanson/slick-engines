@@ -10,6 +10,14 @@
 * [Engine training](https://github.com/trentmwillis/engine-training)
 * [Ember Engines Live Coding](https://www.youtube.com/watch?v=JsbtTk-rMRU)
 
+### Dependencies
+
+* [Spectrums - Ember Engine](https://github.com/bob-hanson/spectrums)
+* [Spectrum Chat - Ember Engine](https://github.com/bob-hanson/spectrum-chat)
+* [Spectrum Component - Ember Addon](https://github.com/bob-hanson/spectrum-component)
+
+
+
 ### Setup Current App
 
 install Ember Engines in your App.
@@ -137,7 +145,38 @@ export default Eng;
 
 ***NOTE: If you are creating a Routless Engine, this is all you need**
 
-### Create External Engine Routes
+### Create In App Repo
+
+Sometimes you wnat to create engies that remain in the larger code base, but are still separated out of organization purposes
+
+We can create **In App Engines**
+
+Run this command from inside your {{EmberApp}} directory
+
+```
+// {{EmberApp}}
+
+ember g in-repo-engine pop-spectrum
+
+```
+
+The biggest difference here is your new Engine gets added to the {{EmberApp}}/lib dir. Most of the rest remains the same.
+
+### Create Routeless Engine
+
+Routeless Engines are for Isolated pieces of your app that you may not need to be routed. In this example Ive added a dummy chat engine. It gets mounted in the {{EmberApp}} application template and becomes available to all routed templates.
+
+To Mount one you simply add a {{mount ...}} to you template where you want the Engine injected.
+
+```
+// {{EmberApp}}/application.hbs
+
+{{mount spectrum-chat}}
+
+```
+
+
+### Create Engine Routes
 
 To have routes under your Engine, we'll need to add a routes.js file to the addon dir.
 
