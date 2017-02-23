@@ -199,7 +199,7 @@ module.exports = EngineAddon.extend({
   lazyLoading: true
 });
 ```
-Also, To allow our app to reload when we are working in our dev env. Lets add a method **"isDevelopingAddon"** to do so in our index.js
+Also, to allow our app to reload when we are working in our dev env, lets add the method **"isDevelopingAddon"** to do so in our index.js
 
 ```
 const EngineAddon = require('ember-engines/lib/engine-addon');
@@ -210,5 +210,157 @@ module.exports = EngineAddon.extend({
   isDevelopingAddon: function() {
     return true;
   }
+});
+```
+
+### External Links in Engines
+
+There are a few things to note about linking. Both internal to the engine and external to the parent.
+
+When internal, the thing to note is. The top level route becomes **"application"** and if you have any top level nested scoped routes, they do not need the prefix.
+
+**Internal**
+
+In the case of our "rock-spectrums" route that is now an Engine.
+
+```
+{{link-to 'application'}} // will now link to the top level inside the engine.
+
+```
+If we had a "rock-spectrums/:id"
+
+```
+{{link-to 'rock-spectrum' spectrum }} // notice we dont have the top level in the link path.
+
+```
+**External**
+
+A few more things need to happen to wire up links that are external to an engine.
+
+We need to declare the dependent routes were wanting to link to in the engine.js file
+
+```
+// addon/engine.js
+
+export default Engine.extend({
+  // ...
+  dependencies: {
+    externalRoutes: [
+      'songs',
+      'albums'
+    ]
+  }
+});
+```
+And we also need to set these in the parent app in the app.js file
+
+```
+// parent-app/app.js
+
+const App = Ember.Application.extend({
+  // ....
+  engines: {
+    superBlog: {
+      dependencies: {
+        externalRoutes: {
+          songs: 'songs.index',
+          albums: 'albums.index'
+        }
+      }
+    }
+  }
+
+});
+```
+Then in your Engine, you would use {{link-to-external ... }} instead of {{link-to ... }}
+
+```
+{{link-to "rock-spectrum" spectrum }} // Internal
+{{link-to-external "songs"}} // External
+{{link-to-external "albums"}} // External
+
+```
+
+### Services in Engines
+
+Using services is an Engine is a way to pass around state to your engines. Its pretty simple to allow service access in an Engine. It requires to registration points.
+
+**In the Engine**
+
+```
+// addon/engine.js
+
+export default Engine.extend({
+  // ...
+  dependencies: {
+  	 services: [ 'store', 'session' ],
+    externalRoutes: [
+      'songs',
+      'albums'
+    ]
+  }
+});
+```
+
+**In the Parent**
+
+```
+// parent-app/app.js
+
+const App = Ember.Application.extend({
+  // ....
+  engines: {
+    superBlog: {
+      dependencies: {
+      services: ['store', 'session'],
+        externalRoutes: {
+          songs: 'songs.index',
+          albums: 'albums.index'
+        }
+      }
+    }
+  }
+
+});
+```
+
+**Note:** You can namespace a service when defining in the parent by passing a object KV.
+
+services: [{ engineSessionService: 'parent-sesson-service']
+
+### Using Components
+
+Because Engines by default are isolated, Accessing parent compoents in an Engine cant happen by simply registering it.
+
+To use a common component across engines, you'll need to move that component to an Addon and then include it in your engine.
+
+You can add the addon to your devDependencies and then re-export it.
+
+```
+// package.json in engine
+
+devDependecies: {
+
+  my-addon: '*'
+
+}
+
+```
+Then in the addon dir, re-export it.
+
+```
+// MyEngine/addons/components/my-addon-component.js
+
+export { default } from 'my-addon/components/my-addon-component';
+
+
+```
+
+Also, if you have the proper content in the index.js file of your engine, it will export all by default
+
+```
+var EngineAddon = require('ember-engines/lib/engine-addon');
+module.exports = EngineAddon.extend({
+  name: 'my-engine'
 });
 ```
