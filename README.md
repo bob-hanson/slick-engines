@@ -1,4 +1,4 @@
-# Ember Meetup SLC - Ember Engine
+# Ember Meetup SLC - Ember Engines
 
 
 
@@ -16,9 +16,20 @@
 * [Spectrum Chat - Ember Engine](https://github.com/bob-hanson/spectrum-chat)
 * [Spectrum Component - Ember Addon](https://github.com/bob-hanson/spectrum-component)
 
+Once pulled down, you can npm link them on your local
+
+```
+// {{ Addon or Engine dir }}
+npm link
+```
+
+```
+// {{ Consuming app dir }}
+npm link <addon/engine name>
+```
 
 
-### Setup Current App
+## Setup Ember App (host) to consume Engines
 
 install Ember Engines in your App.
 
@@ -28,11 +39,11 @@ ember install ember-engines
 ```
 
 
-### Create External Engine
+## Create An External Engine
 
 Setup New Addon
 
-In our case, we have wanting rock-spectrums as an external engine. But we can also create a generic engine and name it in the routes when we mount it. so lets do that. This will allow us to use 1 Engines for multiple routes.
+In our case, we have wanting rock-spectrums as an external engine. But we can also create a generic engine and name it in the routes when we mount it. so lets do that. This will allow us to use 1 Engine for multiple routes.
 
 ```
 // in your code folder, outside your current app.
@@ -145,7 +156,7 @@ export default Eng;
 
 ***NOTE: If you are creating a Routless Engine, this is all you need**
 
-### Create In App Repo
+## Create In App Repo
 
 Sometimes you wnat to create engies that remain in the larger code base, but are still separated out of organization purposes
 
@@ -162,11 +173,11 @@ ember g in-repo-engine pop-spectrum
 
 The biggest difference here is your new Engine gets added to the {{EmberApp}}/lib dir. Most of the rest remains the same.
 
-### Create Routeless Engine
+## Create Routeless Engine
 
-Routeless Engines are for Isolated pieces of your app that you may not need to be routed. In this example Ive added a dummy chat engine. It gets mounted in the {{EmberApp}} application template and becomes available to all routed templates.
+Routeless Engines are for isolated pieces of your app that you may not need to be routed and that can be lazily loaded. In this example we've added a dummy chat engine. It gets mounted in the {{EmberApp}} application template and becomes available to all routed templates.
 
-To Mount one you simply add a {{mount ...}} to you template where you want the Engine injected.
+To mount one you simply add a {{mount ...}} to you template where you want the Engine injected.
 
 ```
 // {{EmberApp}}/application.hbs
@@ -175,8 +186,7 @@ To Mount one you simply add a {{mount ...}} to you template where you want the E
 
 ```
 
-
-### Create Engine Routes
+## Create Engine Routes
 
 To have routes under your Engine, we'll need to add a routes.js file to the addon dir.
 
@@ -263,7 +273,7 @@ module.exports = EngineAddon.extend({
 });
 ```
 
-### External Links in Engines
+## External Links in Engines
 
 There are a few things to note about linking. Both internal to the engine and external to the parent.
 
@@ -331,7 +341,15 @@ Then in your Engine, you would use {{link-to-external ... }} instead of {{link-t
 
 ```
 
-### Services in Engines
+**Note:** You also have transition helpers available in you engine. Very similar to their counterparts.
+
+```
+this.transitionToExternal('path');
+this.replaceWithExternal('path');
+```
+
+
+## Services in Engines
 
 Using services is an Engine is a way to pass around state to your engines. Its pretty simple to allow service access in an Engine. It requires to registration points.
 
@@ -382,7 +400,7 @@ const App = Ember.Application.extend({
 services: [{ engineSessionService: 'parent-sesson-service']
 ```
 
-### Using Components
+## Using Components
 
 Because Engines by default are isolated, Accessing parent compoents in an Engine cant happen by simply registering it.
 
@@ -414,8 +432,6 @@ export { default } from 'my-addon/components/my-addon-component';
 **components** is the components dir in the Node/addon
 
 **my-addon-component** the name of the component to export.
-
-
 
 Also, if you have the proper content in the {{MyEngine}}/index.js file, it will export all by default
 
